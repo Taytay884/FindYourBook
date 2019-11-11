@@ -1,0 +1,5 @@
+<header>
+  <span>Hey, {{userName}} | </span>
+  <a [routerLink]="'/welcome'" (click)="onLogoutClicked()">Logout</a> |
+  <a class="link" (click)="onRouteLinkClicked()">{{otherRoute}}</a>
+</header>

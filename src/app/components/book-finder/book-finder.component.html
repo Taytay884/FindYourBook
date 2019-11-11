@@ -1,0 +1,72 @@
+<ng-template #previewBookModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Book Preview</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h4>{{previewBook.title}}</h4>
+    <h5 class="font-weight-light"*ngIf="previewBook.subtitle">{{previewBook.subtitle}}</h5>
+    <h5 class="font-weight-light font-italic">{{previewBook.author}}</h5>
+    <div *ngIf="previewBook.categories.length" class="categories">
+      <hr>
+      <span class="badge badge-info" *ngFor="let category of previewBook.categories">{{category}}</span>
+      <hr>
+    </div>
+    <img *ngIf="previewBook.imageSrc" [src]=previewBook.imageSrc alt="book-image">
+    <img *ngIf="!previewBook.imageSrc" src='./assets/img/image-not-available.png' alt="Image not available">
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-outline-dark" (click)="modal.close();">Close</button>
+    <button class="btn btn-primary" [hidden]="isPreviewBookAddedToWishList" (click)="onAddToWishlistButtonClicked()">Add
+      to Wishlist
+    </button>
+    <button [disabled]="true" class="btn btn-success" [hidden]="!isPreviewBookAddedToWishList" (click)="onAddToWishlistButtonClicked()">
+      Added!
+    </button>
+  </div>
+</ng-template>
+
+<div>
+  <main>
+    <div class="search">
+      <form [formGroup]="bookForm">
+        <label for="book-search" class="custom-control-label">Insert book name</label>
+        <input [value]="lastQuery" id="book-search" type="text" class="form-control" formControlName="bookName" name="value"/>
+      </form>
+    </div>
+    <div class="books-container container">
+      <div class="spinner-border text-primary" role="status" *ngIf="isLoading">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <ol class="books" *ngIf="books && !isLoading">
+        <li class="book-row" *ngFor="let book of getCurrentPageBooks()" style="width: 18rem">
+          <div class="card">
+            <img *ngIf="book.imageSrc" [src]=book.imageSrc alt="book-image">
+            <img *ngIf="!book.imageSrc" src='./assets/img/image-not-available.png' alt="Image not available">
+            <div class="card-body">
+              <div><h5 class="card-title">{{ book.title }}</h5></div>
+              <div class="card-text"><p>{{ book.author }}</p></div>
+              <button href="#" class="btn btn-primary" (click)="chooseBook(book, previewBookModal)">View this book</button>
+            </div>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </main>
+  <footer>
+    <nav>
+      <ul class="pagination" *ngIf="pagesAmount > 1">
+        <li [hidden]="pagesAmount < 2 || currentPage === 1" class="page-item">
+          <a class="page-link" (click)="movePage(currentPage-1)">Previous</a></li>
+        <li *ngFor="let page of [].constructor(pagesAmount); let pageNumber = index;"
+            class="page-item" [ngClass]="{'active': currentPage === pageNumber+1}">
+          <a class="page-link" (click)="movePage(pageNumber+1)">{{pageNumber + 1}}</a>
+        </li>
+        <li [hidden]="pagesAmount < 2 || currentPage === pagesAmount" class="page-item">
+          <a class="page-link" (click)="movePage(currentPage+1)">Next</a></li>
+      </ul>
+    </nav>
+  </footer>
+</div>

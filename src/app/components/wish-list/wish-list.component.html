@@ -1,0 +1,35 @@
+<ng-template #removeWishlistBookConfirmation let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Remove Wishlist Book Confirmation</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h4>Are you sure you want to remove this book?</h4>
+    <h5 class="font-weight-light font-italic">{{bookToRemove.title}}</h5>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-outline-dark" (click)="modal.close();">No</button>
+    <button class="btn btn-danger" (click)="modal.close(); onRemoveConfirmed();">Yes</button>
+  </div>
+</ng-template>
+
+<main>
+  <div class="books-container container">
+    <h2 [hidden]="wishlistBooks.length">Your wishlist is empty.</h2>
+    <h2 [hidden]="!wishlistBooks.length">Your Wishlist:</h2>
+    <ol class="books" *ngIf="wishlistBooks.length">
+      <li class="book-row" *ngFor="let book of wishlistBooks; let idx = index;" style="width: 18rem">
+        <div class="card">
+          <img *ngIf="book.imageSrc" [src]=book.imageSrc alt="book-image">
+          <div class="card-body">
+            <div><h5 class="card-title">{{ book.title }}</h5></div>
+            <div class="card-text"><p>{{ book.author}}</p></div>
+            <button href="#" class="btn btn-danger" (click)="openRemoveBookModal(removeWishlistBookConfirmation, idx)">Remove</button>
+          </div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</main>
